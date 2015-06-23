@@ -1,0 +1,1 @@
+A tool for teachers to keep track of assignments and their students' grades.
