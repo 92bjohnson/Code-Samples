@@ -14,14 +14,14 @@ import java.util.ArrayList;
 public class OthelloSmartPlayer extends OthelloPlayer
 {
     public OthelloMove getMove(OthelloState state)
-	{
+    {
         int iterations = 10000;
         OthelloMove smartestMove = mcts(state,iterations);
         return smartestMove;
     }
 	
     public int eval(OthelloState state,boolean p1)
-	{
+    {
         int score = 0;
         int PLAYER1 = 0;
         int PLAYER2 = 1;
@@ -33,59 +33,60 @@ public class OthelloSmartPlayer extends OthelloPlayer
         int p1_score = 0;
 		
         for(int i = 0; i < boardSize; i++)
+	{
+	    for(int j = 0; j < boardSize; j++)
+	    {
+	        for (int p = 0; p < 2; p++)
 		{
-			for(int j = 0; j < boardSize; j++)
-			{
-				for (int p = 0; p < 2; p++)
-				{
-					if (p == 0) player = PLAYER1;
-					else player = PLAYER2;
-					if (board[i][j] == player)
-					{
-						/*
-						check to see if there are pieces in any of the corners. since corner pieces cannot be reversed, they are
-						very valuable. also check for pieces adjacent to corner pieces. these pieces cannot be reversed either, so they
-						are valuable as well.
-						*/
-						if (i == 0 && j == 0 && board[i][j] == player) {
-							check_vert = 1; check_hor = 1; score += 10;
-						}
-						else if (i == 0 && j == 7 && board[i][j] == player) {
-							check_vert = 1; check_hor = -1; score += 10;
-						}
-						else if (i == 7 && j == 0 && board[i][j] == player) {
-							check_vert = -1; check_hor = 1; score += 10;
-						}
-						else if (i == 7 && j == 7 && board[i][j] == player) {
-							check_vert = -1; check_hor = -1; score += 10;
-						}
-						else score++;
+		    player = (p == 0) ? PLAYER1 : else player = PLAYER2;
+		    if (board[i][j] == player)
+		    {
+		        /*
+			check to see if there are pieces in any of the corners. since corner pieces cannot be reversed, they are
+			very valuable. also check for pieces adjacent to corner pieces. these pieces cannot be reversed either, so they
+			are valuable as well.
+			*/
+		        if (i == 0 && j == 0 && board[i][j] == player) {
+		            check_vert = 1; check_hor = 1; score += 10;
+		        }
+		        else if (i == 0 && j == 7 && board[i][j] == player) {
+		            check_vert = 1; check_hor = -1; score += 10;
+		        }
+		        else if (i == 7 && j == 0 && board[i][j] == player) {
+		            check_vert = -1; check_hor = 1; score += 10;
+		        }
+		        else if (i == 7 && j == 7 && board[i][j] == player) {
+		            check_vert = -1; check_hor = -1; score += 10;
+		        }
+		        else score++;
 						
-						if (check_vert == 1) {
-							for (int k = i; k < boardSize; k = k++) {
-								score += adj2corner(player,board,k,j);
-							}
-						}
-						else if (check_vert == -1) {
-							for (int k = i; k > 0; k = k--) {
-								score += adj2corner(player,board,k,j);
-							}
-						}
-						if (check_vert == 1) {
-							for (int k = j; k < boardSize; k = k++) {
-								score += adj2corner(player,board,k,j);
-							}
-						}
-						else if (check_vert == -1) {
-							for (int k = j; k > 0; k = k--) {
-								score += adj2corner(player,board,k,j);
-							}
-						}
-					}
-					if (p == 0) { p1_score = score; }
-				}
+		        if (check_vert == 1) {
+		            for (int k = i; k < boardSize; k = k++) {
+		                score += adj2corner(player,board,k,j);
+			    }
 			}
+			else if (check_vert == -1) {
+			    for (int k = i; k > 0; k = k--) {
+			        score += adj2corner(player,board,k,j);
+			    }
+			}
+			
+			if (check_vert == 1) {
+			    for (int k = j; k < boardSize; k = k++) {
+			        score += adj2corner(player,board,k,j);
+			    }
+			}
+			else if (check_vert == -1) {
+			    for (int k = j; k > 0; k = k--) {
+			        score += adj2corner(player,board,k,j);
+			    }
+			}
+		    }
+					
+		    if (p == 0) { p1_score = score; }
 		}
+	    }
+       }
         /*
         Normally we search for the solution that gives the greatest difference between the number of smart player and opponent pieces.
         However, the code below will utilize the solution that allows the smart player to win in the least number of moves.
@@ -94,11 +95,11 @@ public class OthelloSmartPlayer extends OthelloPlayer
         score because it is an automatic win.
         */
         for(int i = 0; i < boardSize;i++)
-		{
+	{
             for(int j = 0;j < boardSize;j++)
-			{
+	    {
                 if ((p2 && board[i][j] == PLAYER1) || board[i][j] == PLAYER2)  {
-					return p1_score - score;
+		    return p1_score - score;
                 }
             }
             return 1000;
@@ -106,13 +107,14 @@ public class OthelloSmartPlayer extends OthelloPlayer
         return 1;
     }
     
-	public int adj2corner(int PLAYER1,int board[][],int k,int j)
+    public int adj2corner(int PLAYER1,int board[][],int k,int j)
     {
-		int r = (board[k][j] == PLAYER1) ? 2 : 0; 
+	int r = (board[k][j] == PLAYER1) ? 2 : 0; 
         return r;
     }
 	
-    public OthelloMove mcts(OthelloState board,int iterations) {
+    public OthelloMove mcts(OthelloState board,int iterations)
+    {
         OthelloNode root;
         OthelloState node2;
         int node2Score = 0;
@@ -120,9 +122,9 @@ public class OthelloSmartPlayer extends OthelloPlayer
         List<OthelloNode> children = new ArrayList<OthelloNode>(root.getChildren());
 		
         for (int i = 0; i < iterations; i++)
-		{
+	{
             OthelloNode node = treePolicy(root,children);
-            if (node != null)  {
+            if (node != null) {
                 node2 = defaultPolicy(node);
                 node2Score = node2.score();
                 node.backup(node2Score);
@@ -132,7 +134,8 @@ public class OthelloSmartPlayer extends OthelloPlayer
         return m.getMove();
     }
 	
-    public OthelloNode treePolicy(OthelloNode node,List<OthelloNode> children) {
+    public OthelloNode treePolicy(OthelloNode node,List<OthelloNode> children)
+    {
         if (children.size() > 0) {
             OthelloNode c = children.get(0);
             children.remove(0);
@@ -156,7 +159,8 @@ public class OthelloSmartPlayer extends OthelloPlayer
         return node;
     }
 	
-    public OthelloState defaultPolicy(OthelloNode node) {
+    public OthelloState defaultPolicy(OthelloNode node)
+    {
         OthelloState clone = node.getState();
         boolean stop = false;
 		
@@ -173,7 +177,7 @@ public class OthelloSmartPlayer extends OthelloPlayer
     }
 	
     public OthelloNode createNode(OthelloState board)
-	{
+    {
         OthelloNode t = new OthelloNode();
         List<OthelloMove> moves = board.generateMoves();
         t.setChildren(moves,t,board);
@@ -183,7 +187,7 @@ public class OthelloSmartPlayer extends OthelloPlayer
     }
 	
     public OthelloNode bestChild(OthelloNode node)
-	{
+    {
         List<OthelloNode> children = node.getChildren();
         OthelloNode max;
         try {
@@ -213,7 +217,7 @@ public class OthelloSmartPlayer extends OthelloPlayer
     OSM = OthelloSmartestMove class
     */
     public OSM minimax(OthelloState state,int depth,boolean maximizingPlayer,boolean p1, boolean p2)
-	{
+    {
         List<OthelloMove> moves = state.generateMoves();
         OSM smartestMove = new OSM();
         if (maximizingPlayer)  {
