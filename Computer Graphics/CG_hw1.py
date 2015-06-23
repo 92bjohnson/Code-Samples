@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+#	Creates an image based on input from a .ps image file.
+#	Rotates, translates, and scales lines, and allows for the adjustment of the viewing window.
+
 import sys
 import numpy
 import argparse
