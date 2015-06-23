@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+#	Creates meshes from .smf files and maps them to a viewport.
+
 import sys
 import numpy
 import argparse
