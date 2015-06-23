@@ -1,3 +1,7 @@
+/*
+    Unit tests for the autocomplete module
+*/
+
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BCIKeyboard;
